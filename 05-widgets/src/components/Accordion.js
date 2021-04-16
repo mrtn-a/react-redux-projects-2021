@@ -7,7 +7,7 @@ const Accordion = ({ items }) => {
 	const onTitleClick = (index) => {
 		setActiveIndex(index);
 	};
-
+	
 	const renderedItems = items.map((item, index) => {
 		// check if index of the item that we are currently iterating over
 		// is equal to the activeIndex piece of state

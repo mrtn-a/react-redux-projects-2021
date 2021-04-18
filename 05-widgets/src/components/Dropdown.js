@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 
-const Dropdown = ({ options, selected, onSelectedChange }) => {
+const Dropdown = ({ label, options, selected, onSelectedChange }) => {
   // toggle CSS classes
   const [open, setOpen] = useState(false);
   // assign a reference
@@ -43,10 +43,11 @@ const Dropdown = ({ options, selected, onSelectedChange }) => {
       </div>
     );
   });
+
   return (
     <div ref={ref} className="ui form">
       <div className="field">
-        <label className="label">Select a color</label>
+        <label className="label">{label}</label>
         <div
           // on click set to the opposite of the current value open (true or false)
           onClick={() => setOpen(!open)}

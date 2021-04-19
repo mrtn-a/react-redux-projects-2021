@@ -3,9 +3,19 @@ import axios from "axios";
 
 const Search = () => {
   const [term, setTerm] = useState("programming");
+  const [debouncedTerm, setDebouncedTerm] = useState(term);
   const [results, setResults] = useState([]);
 
-  // console.log	(results);
+  useEffect(() => {
+    const timerId = setTimeout(() => {
+      setDebouncedTerm(term);
+    }, 1000);
+
+    return () => {
+      clearTimeout(timerId);
+    };
+  }, [term]);
+
   useEffect(() => {
     const search = async () => {
       const { data } = await axios.get("https://en.wikipedia.org/w/api.php", {
@@ -14,33 +24,16 @@ const Search = () => {
           list: "search",
           origin: "*",
           format: "json",
-          srsearch: term,
+          srsearch: debouncedTerm,
         },
       });
 
-      // update piece of state + re-render
       setResults(data.query.search);
     };
-
-    // first time rendering the component ->
-    // -> if there's a term present and we have no results yet:
-    if (term && !results.length) {
+    if (debouncedTerm) {
       search();
-    } else {
-      const timeoutId = setTimeout(() => {
-        if (term) {
-          search();
-        }
-      }, 500);
-
-      // clean up function
-      return () => {
-        clearTimeout(timeoutId);
-      };
     }
-  }, [term]);
-  // -> run arrow function when we first render the page +
-  // + whenever we re render our component and the term has changed
+  }, [debouncedTerm]);
 
   const renderedResults = results.map((result) => {
     return (
@@ -65,10 +58,10 @@ const Search = () => {
     <div>
       <div className="ui form">
         <div className="field">
-          <label>Enter search term</label>
+          <label>Enter Search Term</label>
           <input
             value={term}
-            onChange={(event) => setTerm(event.target.value)}
+            onChange={(e) => setTerm(e.target.value)}
             className="input"
           />
         </div>
